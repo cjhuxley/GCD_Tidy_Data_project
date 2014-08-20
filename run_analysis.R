@@ -4,6 +4,8 @@
 # if it is test or train data.
 #
 setwd("C:/Users/Chris/Desktop/Getting and Cleaning Data/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset")
+#add activity labels
+activity<-read.table("activity_labels.txt")
 setwd("train")
 trainData<-read.table("X_train.txt")
 setwd("C:/Users/Chris/Desktop/Getting and Cleaning Data/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset")
@@ -11,12 +13,12 @@ setwd("test")
 testData<-read.table("X_test.txt")
 subject<-read.table("subject_test.txt") # test subject labels
 testOrTrain<-rep("test",2947)#test lables for testOrTrain column
-#add activity lables
+
 testData2<-cbind(testOrTrain, subject, testData)
 testOrTrain<-rep("train",7352) #train lables for testOrTrain column
 subject<-read.table("subject_train.txt") # train subject labels
 trainData2<-cbind(testOrTrain,subject,trainData)
-#add activity lables
+#add activity labels
 # Merge training and test data into "dataSet"
 dataSet<-rbind(testData2,trainData2)
 

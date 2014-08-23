@@ -1,24 +1,36 @@
-# Getting and Cleaning Data Course Project Code Book
+## Getting and Cleaning Data Course Project Code Book
 
-## About the data
-> The goal in creating the datatable was to demonstrate the ability to prepare tidy data for later analysis. No information was provided as to what that analysis might be. The data is in the repo file "dataFile2.csv" and is a comma delimited file. The form of the data is wide form.
+### About the data
+> The goal in creating the datatable was to demonstrate the ability to prepare tidy data for later analysis. No information was provided as to what that analysis might be. The data is in the repo file "tidyData2.txt" and is a space delimited text file. The form of the data is narrow form.
 
 > The original source of the data presented was obtained from the UCI Machine Learning repository. The data and background of the data collection can be found here:
 
 > [data link](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones)
 
+> A description of the variables in the original data and how they were measured or calculated are found in the features_info.txt file in the UCI HAR Dataset folder. Two instruments were used to generate the data, a smartphone accelerometer and gyroscope. The raw signals were recorded 50 times per second and the data filtered. It was then separated into into body and gravity acceleration signals.Next, body linear acceleration and angular velocity measurements were calculated and used to determine "Jerk signals" as well as Euclidean norm magnitudes. Finally, a Fast Fourier Transform(FFT) method was applied to the data to derive a range of frequency domain signals. By averaging signals in a signal window sample a number of vectors were generated from which angles between vectors could be calculated. 
+
+> In the original data set a wide range of statistics were also calculated but these have been excluded from the final data set as the aim was only to deal with mean and standard deviation data.
+
+> The aim of preparing the data in the file tidydata2.txt was to create a tidy data file. In doing this the paper by [Hadley Wickham Tiday] (http://vita.had.co.nz/papers/tidy-data.pdf) was used as a guide. An attempt has been made to ensure that:
+
+>>each variable forms a column (subjects and activites);
+each observation forms a row (measurements);
+each type of observational unit forms a table.
+
+> Observation names are in camel case. While it might be argued that all lower case names is more 'tidy'. I took the view that Camel case makes the titles more readable and provides a range of handles for subsetting data in the future. I probably would have done something slightly different if I knew what the subsequent analysis of the data would entail.
+
 > The citation for this data is: 
 
 >>Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012)</p>
 
-## How the data was created
+### How the data was created
 
 
-## Data Explanation
+### Data Explanation
 
 <table style="width:700px">
     <tr>
-		<th>Variable name</th>
+		<th>Variable/Observation</th>
 		<th>Column Location</th> 
 		<th>Variable Definition</th>
 		<th>Range of Values</th>

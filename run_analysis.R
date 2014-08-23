@@ -1,30 +1,63 @@
-#To be run_analysis.R
-#Download files
-# Merges the training and the test sets to create one data set.Includes addition of a column to indicate 
-# if it is test or train data.
-#
-setwd("C:/Users/Chris/Desktop/Getting and Cleaning Data/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset")
-#add activity labels
-activity<-read.table("activity_labels.txt")
-setwd("train")
-trainData<-read.table("X_train.txt")
-setwd("C:/Users/Chris/Desktop/Getting and Cleaning Data/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset")
-setwd("test")
-testData<-read.table("X_test.txt")
-subject<-read.table("subject_test.txt") # test subject labels
-testOrTrain<-rep("test",2947)#test lables for testOrTrain column
+#run_analysis.R
 
-testData2<-cbind(testOrTrain, subject, testData)
-testOrTrain<-rep("train",7352) #train lables for testOrTrain column
-subject<-read.table("subject_train.txt") # train subject labels
-trainData2<-cbind(testOrTrain,subject,trainData)
-#add activity labels
-# Merge training and test data into "dataSet"
-dataSet<-rbind(testData2,trainData2)
+# 1. Merges the training and the test sets to create one data set.
+  
+  home<-getwd() #Assume the R file is in "UCI HAR Dataset" folder
+  
+  #load activity labels
+  activity<-read.table("activity_labels.txt")
+  
+  
+  #load training data then test data and add subject ID to each
+    setwd("train")
+    trainData<-read.table("X_train.txt")
+    subject<-read.table("subject_train.txt") # train subject labels
+    trainData<-cbind(trainData,subject)
+    setwd(home)
+    setwd("test")
+    testData<-read.table("X_test.txt")
+    subject<-read.table("subject_test.txt") # test subject labels
+    testData<-cbind(testData,subject)
+  
+  # Merge training and test data into "dataSet" and add titles
+    dataSet<-rbind(testData,trainData)
+    setwd(home)
+    features <- read.table("features.txt")
+    headings<- c(as.character(features$V2),"subject")
+    colnames(dataSet)<-headings
 
-# Add titles to trainData and add subject id 
-  #Deal with test labels as they are already open
-# Extracts only the measurements on the mean and standard deviation for each measurement. 
-# Uses descriptive activity names to name the activities in the data set
-# Appropriately labels the data set with descriptive variable names. 
-#Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
+# 2. Extract only the measurements on the mean and standard deviation for each measurement. 
+    meanStdData<-dataSet[,grep("mean|std|subject", names(dataSet))]
+
+# 3. Use descriptive activity names to name the activities in the data set
+
+    setwd(home)
+    labels<-read.table("activity_labels.txt") # labels 
+  
+  # input relevant data from train folder
+    setwd("train")
+    subjectTraining<-read.table("subject_train.txt") 
+    activityTrain<- read.table("y_train.txt")
+    setwd("C:/Users/Chris/Desktop/Getting and Cleaning Data/getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset")
+  
+  # input relevant data from test folder
+    setwd("test")
+    subjectTesting<-read.table("subject_test.txt")
+    activityTest<- read.table("y_test.txt")
+  
+  # bind subject and activity data
+    subjects<-rbind(subjectTraining,subjectTesting)
+    activityNums<-rbind(activityTrain,activityTest)
+  
+  #use sapply and gsub to replace numbers with labels
+    for (i in 1:nrow(labels)){
+      activityNums<-as.data.frame(sapply(activityNums,gsub,pattern= i, replacement=labels[i,2]))
+      
+    }
+    activity<-activityNums
+    meanStdData<-cbind(meanStdData,activity)
+    names(meanStdData)[81]<-paste("activity") # add descriptive label to column
+
+# 4.Appropriately labels the data set with descriptive variable names. 
+# remove 
+#5. Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 

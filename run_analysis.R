@@ -63,6 +63,8 @@
 
 # 4.Appropriately labels the data set with descriptive variable names. 
     temp<-gsub("[[:punct:]]","",names(meanStdData)) #remove punctuation characters
+    temp<-gsub("mean", "Mean",temp)
+    temp<-gsub("std", "Std",temp)
     temp<-gsub("^t","time",temp) # make [t]ime more meaningful
     temp<-gsub("^f","freq",temp) # make [f]requency more meaningful
     names(meanStdData)<- paste(temp)

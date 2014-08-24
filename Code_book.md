@@ -1,5 +1,24 @@
 ## Getting and Cleaning Data Course Project Code Book
 
+###Summary
+> This codebook describes the data file called tidyData2.txt in the git repository 		 
+	https://github.com/cjhuxley/GCD_Tidy_Data_project 
+	
+> The data file consists of the mean values for 80 observations for 6 activites and 30 participant subjects. As per the requirements of the assignment, the file is a tidy data set with the average of each variable for each activity and each subject.
+
+#### Files relevant to this data file and its creation
+- tidyData2.txt
+- Code_book.md (this file)
+- run_analysis.R
+
+#### Extent of processing
+> The file run_analysis.R contains the code used to generate tidyData2.txt
+> See the section below **How the data was created** for an overview of the processing.
+
+#### Data format
+> The file is a text file with space delimiters
+___
+
 ### About the data
 > The goal in creating the datatable was to demonstrate the ability to prepare tidy data for later analysis. No information was provided as to what that analysis might be. The data is in the repo file "tidyData2.txt" and is a space delimited text file. The form of the data is narrow form.
 
@@ -24,6 +43,62 @@ each type of observational unit forms a table.
 >>Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012)</p>
 
 ### How the data was created
+>This is a summary of the steps and coding in the file “run_analysis.R”. The steps below are in the order requested in the assignment outline. The code in “run_analysis.R” is the way it is for readability. Normally the 5 steps here would all be coded as separate functions but it is the way it is ,hopefully, to make things easier for the judges of the process.
+
+>**Step 1.** Merge the training and the test sets to create one data set.
+
+1.Loaded activity labels from the file "activity_labels.txt"
+
+2.Loaded training data then test data and add subject ID to each. Simple use of read.table used for this. Data and subject identifers were combined using the cbind function.
+
+>Files involved were:
+- "X_train.txt"(training data), 
+- subject_train.txt" (subject identifiers for participants in the training subgroup), 
+- "X_test.txt" (the test data), and
+- "subject_test.txt" (the test participant identifiers).
+ 
+>Next, the training and test data were merged into a data frame called "dataSet" and titles from the features.txt file were added on the far right of the table
+
+>**Step 2.** Extract only the measurements on the mean and standard deviation for each measurement. 
+
+>This was fairly straightforward using the grep function applied to the names of the columns in dataset. The simple regex expression
+ "mean|std|subject" was used to identify any column dealing with a mean, standard deviation and the subject column. The result was saved as a table called “meanStdData”
+
+>**Step 3.** Use descriptive activity names to name the activities in the data set
+
+>A similar process was used for the training and test data by binding activity data into a single object and then using use a for loop and the functions sapply and gsub to replace numbers with labels. The result was bound the right side of “meanStdData” and the column title “activity’ pasted into the names for the table.
+
+>**Step 4.** Appropriately labels the data set with descriptive variable names. 
+
+>Tidy data might expect names of columns to be all lower case but the names here use a form of camel case. The reason being that I think it makes the names more understandable and I found that it provides some flexibility in portioning the data for subsequent analysis (although this was not part of the brief).
+
+>The following steps were applied using the gsub function to a copy of  names(meanStdData) called “temp”:
+- Removal of punctuation characters
+- Lower case ‘m’ in mean was replaced with a capital 
+- Lower case ‘s’ in std was replaced with a capital 
+- ‘t’ at the start of time domain data was replaced with the string’time’
+- ‘f’ at the start of the frequency data was replaced with the more meaningful string ‘freq’.
+
+>The processed names were then substituted for names(meanStdData).
+
+>**Step 5.** Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+>(A check was made for missing values in the original function used for this stage. The code has been retained in the final code.)
+
+>This part of the code uses the package “reshape2”. The data was melted using "activity" and"subject" as the id columns into an object called “melt1”.
+
+>Two dcast calls were made to create a table for activity means (variable~activity) and subject means (variable~subject). The two tables were merged into a single one called “summaryTable”. The resulting tables had column names requiring attention. Underscores (_) were removed, lowercase was applied, and “subject” was added to the subject names.
+
+>**Step 6.** Save the final data table as a text file using write.table() with row.names-FALSE.
+
+>This was done using: 
+
+	write.table(summaryTable, file="tidyData2.txt", sep=" ",row.names=FALSE)
+
+>As the code indicates, the final file is called "tidyData2.txt”
+
+
+
 
 
 ### Data Explanation
